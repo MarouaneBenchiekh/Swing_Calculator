@@ -26,14 +26,16 @@ public class CalculatorClass extends JFrame implements ActionListener{
 	private JMenu jMenuFile, jMenuHelp;
 	private JPanel jMaster, jplBackSpace, jplControl;
 	private JLabel jLabelOuput;
+	private JLabel jLabelBase;
 	private JButton JbnButtons[];
 	private boolean firstInput = true;
-	private String numStr1 = "";
+	private String numStr1 = "0";
     private String numStr2 = "";
     Font f12 = new Font("Times New Roman", 0, 12);
 	Font f121 = new Font("Times New Roman", 1, 12);
 	private char op;
 	private char op1;
+	private int currentBase=10;
 
 
     
@@ -58,8 +60,9 @@ public class CalculatorClass extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public CalculatorClass() {
+		currentBase = 10;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 550, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -80,16 +83,24 @@ public class CalculatorClass extends JFrame implements ActionListener{
         // frame componant
         jMaster = new JPanel();
         jLabelOuput = new JLabel("0");
-        
+        jLabelBase = new JLabel("dec");
         // add our componante to fram
         getContentPane().add(jLabelOuput, BorderLayout.NORTH);
-        
+        getContentPane().add(jLabelBase, BorderLayout.EAST);
+        jLabelBase.setForeground(Color.GREEN);
         JbnButtons = new JButton[23];
         
         for(int i = 0; i<= 9; i++) {
         	JbnButtons[i] = new JButton(String.valueOf(i));
         }
-        
+        JButton bin = new JButton("bin");
+        JButton hex = new JButton("hex");
+        JButton octal = new JButton("octal");
+        JButton dec = new JButton("dec");
+        bin.addActionListener(this);
+        hex.addActionListener(this);
+        octal.addActionListener(this);
+        dec.addActionListener(this);
         
      // Create operator Jbuttons
      		JbnButtons[10] = new JButton("+/-");
@@ -110,6 +121,10 @@ public class CalculatorClass extends JFrame implements ActionListener{
      		jplControl.setLayout(new GridLayout(1, 2, 2, 2));
      		JbnButtons[21] = new JButton(" CE ");
      		JbnButtons[22] = new JButton("C");
+     		jplControl.add(bin);
+     		jplControl.add(hex);
+     		jplControl.add(octal);
+     		jplControl.add(dec);
      		jplControl.add(JbnButtons[21]);
      		jplControl.add(JbnButtons[22]);
      		//		Setting all Numbered JButton's to Blue. The rest to Red
@@ -154,7 +169,6 @@ public class CalculatorClass extends JFrame implements ActionListener{
      		jPLButtons.add(JbnButtons[11]);
      		jPLButtons.add(JbnButtons[16]);
      		jPLButtons.add(JbnButtons[12]);
-        
         // JPANEL MASET
         jMaster.setLayout(new BorderLayout());
         jMaster.add(jPLButtons, BorderLayout.SOUTH);
@@ -180,7 +194,6 @@ public class CalculatorClass extends JFrame implements ActionListener{
         String str = String.valueOf(e.getActionCommand());  
 
         char ch = str.charAt(0);                            
-
         switch(ch)                                          
         {
         case '0': case '1': case '2':                       
@@ -189,12 +202,12 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case '9':case'.': if(firstInput)
                   {
                      numStr1 = numStr1 + ch;
-                     jLabelOuput.setText(numStr1);
+                     jLabelOuput.setText(baseConversion(numStr1,10,currentBase));
                   }
                   else
                   {
                       numStr2 = numStr2 + ch;
-                      jLabelOuput.setText(numStr2);
+                      jLabelOuput.setText(baseConversion(numStr2,10,currentBase));
                   }
                   break;
         case '+': case '-': case '*':                       //Step 4b
@@ -205,8 +218,13 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case '=':
         		  resultStr = evaluate(); 
         //Step 4c
-        		  jLabelOuput.setText(resultStr);
-                  numStr1 = resultStr;
+        		  if(currentBase != 10)
+        			  jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(resultStr)),10,currentBase));
+        		  else {
+        			  System.out.println(currentBase);
+        			  jLabelOuput.setText(resultStr);
+        		  }
+                  numStr1 = Integer.toString(Integer.parseInt(resultStr));
                   numStr2 = "";
                   firstInput = false;
                   break;
@@ -262,9 +280,59 @@ public class CalculatorClass extends JFrame implements ActionListener{
                     }
             	}
             }
+        case 'd':
+        	if(numStr2=="")
+            {
+               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,10));
+            }
+            else
+            {
+            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,10));
+            }
+        	currentBase = 10;
+        	jLabelBase.setText("dec");
+
+        	break;
+        case 'h':
+
+        	if(numStr2=="")
+            {
+               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,16));
+            }
+            else
+            {
+            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,16));
+            }
+        	currentBase = 16;
+        	jLabelBase.setText("hex");
+        	break;
+        case 'o':
+        	if(numStr2=="")
+            {
+               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,8));
+            }
+            else
+            {
+            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,8));
+            }
+        	currentBase = 8;
+        	jLabelBase.setText("octal");
+        	break;
+        case 'b':
+        	if(numStr2=="")
+            {
+               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,2));
+            }
+            else
+            {
+            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,2));
+            }
+        	currentBase = 2;
+        	jLabelBase.setText("binary");
+        	break;
         }
 
-
+        
 	}
 	
 	private String evaluate() {
@@ -281,8 +349,7 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case '/':   resultat = x / y; break;
         case '%':   resultat = x % y; break;
         }
-		
-		return String.valueOf(resultat);
+			return String.valueOf((int)resultat);
 	}
 	
 	private String ft_sqrt(String numStr) {
@@ -294,5 +361,10 @@ public class CalculatorClass extends JFrame implements ActionListener{
 		double x = Double.parseDouble(numStr);
 		return String.valueOf(1/x);
 	}
+	
+    public static String baseConversion(String number, int sBase, int dBase) 
+	{ 
+		return Integer.toString( Integer.parseInt(number, sBase), dBase);
+	} 
 
 }
