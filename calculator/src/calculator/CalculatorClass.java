@@ -216,17 +216,19 @@ public class CalculatorClass extends JFrame implements ActionListener{
                   firstInput = false;
                   break;
         case '=':
+        		if(numStr1 !=""&&numStr2!="") {
         		  resultStr = evaluate(); 
         //Step 4c
         		  if(currentBase != 10)
-        			  jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(resultStr)),10,currentBase));
+        			  jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(resultStr)),10,currentBase));
         		  else {
         			  System.out.println(currentBase);
         			  jLabelOuput.setText(resultStr);
         		  }
-                  numStr1 = Integer.toString(Integer.parseInt(resultStr));
+                  numStr1 = resultStr;
                   numStr2 = "";
                   firstInput = false;
+        		}
                   break;
         case 's':
         	op1=ch;
@@ -240,6 +242,7 @@ public class CalculatorClass extends JFrame implements ActionListener{
                 numStr2=ft_sqrt(numStr2);
                 jLabelOuput.setText(numStr2);
             }
+        	jLabelBase.setText("dec");
             break;
         case 'C': jLabelOuput.setText("0");                  //Step 4c
                   numStr1 = "";
@@ -283,13 +286,14 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case 'd':
         	if(numStr2=="")
             {
-               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,10));
+               jLabelOuput.setText(numStr1);
             }
             else
             {
-            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,10));
+            	jLabelOuput.setText(numStr2);
             }
         	currentBase = 10;
+        	System.out.println();
         	jLabelBase.setText("dec");
 
         	break;
@@ -297,11 +301,11 @@ public class CalculatorClass extends JFrame implements ActionListener{
 
         	if(numStr2=="")
             {
-               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,16));
+               jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr1)),10,16));
             }
             else
             {
-            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,16));
+            	jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr2)),10,16));
             }
         	currentBase = 16;
         	jLabelBase.setText("hex");
@@ -309,11 +313,11 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case 'o':
         	if(numStr2=="")
             {
-               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,8));
+               jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr1)),10,8));
             }
             else
             {
-            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,8));
+            	jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr2)),10,8));
             }
         	currentBase = 8;
         	jLabelBase.setText("octal");
@@ -321,11 +325,11 @@ public class CalculatorClass extends JFrame implements ActionListener{
         case 'b':
         	if(numStr2=="")
             {
-               jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr1)),10,2));
+               jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr1)),10,2));
             }
             else
             {
-            	jLabelOuput.setText(baseConversion(Integer.toString(Integer.parseInt(numStr2)),10,2));
+            	jLabelOuput.setText(baseConversion(Integer.toString((int)Double.parseDouble(numStr2)),10,2));
             }
         	currentBase = 2;
         	jLabelBase.setText("binary");
@@ -344,12 +348,12 @@ public class CalculatorClass extends JFrame implements ActionListener{
 		switch(op)                                          
         {
         case '+':  resultat = x + y; break;
-        case '-':  resultat = x - y; break;
+        case '-':  resultat = x - y;  break;
         case '*':   resultat = x * y; break;
         case '/':   resultat = x / y; break;
         case '%':   resultat = x % y; break;
         }
-			return String.valueOf((int)resultat);
+			return String.valueOf(resultat);
 	}
 	
 	private String ft_sqrt(String numStr) {
